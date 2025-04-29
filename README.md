@@ -2,25 +2,25 @@
 
 ## Описание проекта
 
-Проект представляет собой backend-приложение на языке Java, предназначенное для защиты операций с помощью одноразовых OTP-кодов (One Time Password).
+Проект представляет собой backend-приложение на языке Java, предназначенное для защиты операций с помощью одноразовых OTP-кодов (One Time Password).  
 Основные функции:
 
-- Регистрация пользователей и администраторов
-- Генерация OTP-кодов для операций
-- Отправка OTP-кодов через email или сохранение в файл
-- Проверка корректности OTP-кодов
-- Управление конфигурацией OTP-кодов (длина кода и время жизни)
-- Управление пользователями (просмотр и удаление)
+- Регистрация пользователей и администраторов  
+- Генерация OTP-кодов для операций  
+- Отправка OTP-кодов через email или сохранение в файл  
+- Проверка корректности OTP-кодов  
+- Управление конфигурацией OTP-кодов (длина кода и время жизни)  
+- Управление пользователями (просмотр и удаление)  
 
-Проект построен на чистой архитектуре с использованием слоев API, Service и DAO.
+Проект построен на чистой архитектуре с использованием слоев API, Service и DAO.  
 Подключение к базе данных осуществляется через PostgreSQL и JDBC.
 
 ---
 
 ## Требования
 
-- Java 17+
-- Maven
+- Java 17+  
+- Maven  
 - PostgreSQL 17
 
 ---
@@ -77,7 +77,11 @@ mvn exec:java -Dexec.mainClass="com.example.otp.App"
 ```bash
 curl -X POST http://localhost:8080/register \
   -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "adminpass", "role": "ADMIN"}'
+  -d '{
+    "username": "admin",
+    "password": "adminpass",
+    "role": "ADMIN"
+}'
 ```
 
 Ответ:
@@ -93,7 +97,10 @@ User registered successfully
 ```bash
 curl -X POST http://localhost:8080/login \
   -H "Content-Type: application/json" \
-  -d '{"username": "admin", "password": "adminpass"}'
+  -d '{
+    "username": "admin",
+    "password": "adminpass"
+}'
 ```
 
 Ответ:
@@ -106,12 +113,14 @@ curl -X POST http://localhost:8080/login \
 
 ### 3. Генерация OTP-кода
 
-При генерации код сохраняется в файл и приходит на e-mail
-
 ```bash
 curl -X POST http://localhost:8080/generate \
   -H "Content-Type: application/json" \
-  -d '{"username": "user1", "operationId": "confirm_email"}'
+  -d '{
+    "username": "user1",
+    "operationId": "confirm_email",
+    "email": "test@example.com"
+}'
 ```
 
 Ответ:
@@ -120,6 +129,8 @@ curl -X POST http://localhost:8080/generate \
 {"otp":"123456"}
 ```
 
+OTP-код будет отправлен на указанный адрес электронной почты и будет также сохранён в файл проекта.
+
 ---
 
 ### 4. Проверка OTP-кода
@@ -127,7 +138,11 @@ curl -X POST http://localhost:8080/generate \
 ```bash
 curl -X POST http://localhost:8080/verify \
   -H "Content-Type: application/json" \
-  -d '{"username": "user1", "operationId": "confirm_email", "code": "123456"}'
+  -d '{
+    "username": "user1",
+    "operationId": "confirm_email",
+    "code": "123456"
+}'
 ```
 
 Ответ:
@@ -168,7 +183,10 @@ curl -X GET http://localhost:8080/admin/config \
 curl -X POST http://localhost:8080/admin/config \
   -H "Authorization: Bearer your_admin_token" \
   -H "Content-Type: application/json" \
-  -d '{"codeLength": 4, "expirationMinutes": 2}'
+  -d '{
+    "codeLength": 4,
+    "expirationMinutes": 2
+}'
 ```
 
 Ответ:

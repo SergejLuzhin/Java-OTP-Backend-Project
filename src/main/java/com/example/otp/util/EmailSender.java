@@ -30,6 +30,6 @@ public class EmailSender {
         message.setText("Здравствуйте!\n\nВаш OTP-код: " + otp + "\n\nС уважением,\nOTP-сервис");
 
         Transport.send(message);
-        System.out.println("📧 Отправлен OTP-код на email: " + toEmail);
+        System.out.println("Отправлен OTP-код на email: " + toEmail);
     }
 }

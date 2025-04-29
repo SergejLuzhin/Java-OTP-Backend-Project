@@ -45,8 +45,7 @@ public class GenerateOtpHandler implements HttpHandler {
         String username = body.getString("username");
         String operationId = body.getString("operationId");
 
-        // Можно добавить: String email = body.getString("email");
-        String toEmail = "loozhean@ya.ru";
+        String toEmail = body.optString("email", null); // можно не указывать
 
         try {
             Optional<User> userOpt = userDao.findByUsername(username);
@@ -61,16 +60,18 @@ public class GenerateOtpHandler implements HttpHandler {
             // Сохраняем в файл
             OtpFileWriter.saveToFile(username, operationId, code);
 
-            // Отправляем на email
-            try {
-                EmailSender.sendOtp(toEmail, code);
-            } catch (MessagingException e) {
-                e.printStackTrace();
-                sendResponse(exchange, 500, "Не удалось отправить письмо");
-                return;
+            // Отправка на email, если указан
+            if (toEmail != null && !toEmail.isBlank()) {
+                try {
+                    EmailSender.sendOtp(toEmail, code);
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                    sendResponse(exchange, 500, "Failed to send email");
+                    return;
+                }
             }
 
-            // Ответ клиенту
+            // Ответ
             JSONObject response = new JSONObject();
             response.put("otp", code);
             sendResponse(exchange, 200, response.toString());

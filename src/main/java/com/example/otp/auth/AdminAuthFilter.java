@@ -21,13 +21,12 @@ public class AdminAuthFilter extends Filter {
 
         String token = authHeaders.get(0).replace("Bearer", "").trim();
 
-        // 🧪 ВРЕМЕННЫЕ ЛОГИ:
-        System.out.println("🧪 Получен токен: " + token);
+        System.out.println("Получен токен: " + token);
         User user = AuthTokenManager.getUserByToken(token);
         if (user == null) {
-            System.out.println("🔍 Пользователь по токену не найден.");
+            System.out.println("Пользователь по токену не найден.");
         } else {
-            System.out.println("🔍 Пользователь: " + user.getUsername() + " [" + user.getRole() + "]");
+            System.out.println("Пользователь: " + user.getUsername() + " [" + user.getRole() + "]");
         }
 
         if (user == null || user.getRole() != User.Role.ADMIN) {
